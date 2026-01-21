@@ -1,8 +1,8 @@
-name: Deploy Laravel Local (Sail)
+name: Deploy Laravel Sail (Local)
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   deploy:
@@ -12,13 +12,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy with Sail
-        shell: pwsh
+        shell: powershell
         run: |
-          cd $env:GITHUB_WORKSPACE
+          $ErrorActionPreference = "Stop"
+
+          cd $env:GITHUB_WORKSPACE\laravel-app
 
           git pull
 
           .\vendor\bin\sail down
           .\vendor\bin\sail up -d --build
-
           .\vendor\bin\sail artisan migrate --force
