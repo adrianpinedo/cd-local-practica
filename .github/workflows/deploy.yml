@@ -1,0 +1,24 @@
+name: Deploy Laravel Local (Sail)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy with Sail
+        shell: pwsh
+        run: |
+          cd $env:GITHUB_WORKSPACE
+
+          git pull
+
+          .\vendor\bin\sail down
+          .\vendor\bin\sail up -d --build
+
+          .\vendor\bin\sail artisan migrate --force
