@@ -1,4 +1,4 @@
-name: Deploy Laravel Sail (Local)
+name: Deploy Laravel (Local) with Docker Compose
 
 on:
   push:
@@ -11,15 +11,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy with Sail
+      - name: Deploy (docker compose)
         shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
 
-          cd $env:GITHUB_WORKSPACE\laravel-app
+          cd "$env:GITHUB_WORKSPACE\laravel-app"
 
           git pull
 
-          .\vendor\bin\sail down
-          .\vendor\bin\sail up -d --build
-          .\vendor\bin\sail artisan migrate --force
+          docker compose down
+          docker compose up -d --build
+
+          docker compose exec -T laravel.test php artisan migrate --force
